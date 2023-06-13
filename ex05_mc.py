@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jun  6 11:06:41 2023
+
+@author: vinibaynem
+"""
+#%%
+import matplotlib.pyplot as plt
+import numpy as np
+import random as rd
+from scipy.optimize import curve_fit
+from math import pi
+#%%
+def pi_agulhas(N):
+    '''
+    Estima o valor de pi pelo problema das agulhas de Buffon.
+    Realiza medidas a cada 100 passos.
+    Retorna o valor de pi em função do número de passos usados na medição.
+
+    Parameters
+    ----------
+    N : int
+        Número de passos da simulação.
+
+    Returns
+    -------
+    n_list : array
+        Array com a contagem de passos de medição.
+    pi_list : array
+        Array com a estimativa de pi para o correspondente número de passos.
+
+    '''
+    count = [] # contador de agulhas que cruzam uma linha
+    pi_list = [] # lista para a estimativa de pi
+    n_list = [] # lista para o número de passos de medição
+    for i in range(1,int(N)+1): # int(N) para garantir que será tratado como inteiro
+        r1 = rd.random() * pi # número aleatório de 0 a pi
+        r2 = rd.random() # número aleatório de 0 a 1
+        if r2 < np.sin(r1): count.append(r2) # agulha cruza uma linha
+        if len(count) != 0 and i % 100 == 0:
+            # duas condições para a medição:
+            # a. não medir enquanto não houver um ponto dentro do círculo, para evitar divisão por zero
+            # b. medir a cada 100 passos
+            pi_list.append(2*i/len(count)) # adiciona a estimativa de pi na lista
+            n_list.append(i) # adiciona a contagem do passo usado na medição na lista
+    n_list, pi_list = np.asarray(n_list), np.asarray(pi_list)
+    return n_list, pi_list
+#%% Simulação
+n = int(1e6)
+n_list, pi_list = pi_agulhas(n)
+#%% Fitting no erro
+erro = np.abs(pi_list-pi)
+n_log, erro_log = np.log(n_list), np.log(erro)
+def reta(x,a,b): # fitting 
+    return a*x + b
+popt, pcov = curve_fit(reta, n_log, erro_log)
+a, b = popt
+fit = reta(n_log,a,b)
+#%%
+print(a)
+print(b)
+#%% Gráfico para a estimativa de pi
+plt.figure(figsize=(10,6))
+plt.plot(n_list,pi_list, label='Estimativa')
+plt.ylim(3.1325,3.152)
+plt.hlines(y=pi, xmin=n_list[0], xmax=n_list[-1], ls='--', color='darkred', label='Valor real')
+extratick = [pi]
+plt.yticks(list(plt.yticks()[0])+extratick)
+plt.legend()
+plt.xlabel('$N$ (10^6)')
+plt.ylabel('Valor para $\pi$')
+plt.title('Estimativa de $\pi$ em função do número $N$ de agulhas lançadas')
+plt.show()
+#%% Gráfico para o erro
+plt.figure(figsize=(8,4))
+plt.plot(n_log, erro_log)
+plt.plot(n_log, fit)
+plt.xlabel('$\log N$')
+plt.ylabel('$\log |2N/n - \pi|$')
+plt.title('Erro na estimativa')
+plt.show()
