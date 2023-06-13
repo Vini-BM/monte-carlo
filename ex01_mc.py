@@ -23,11 +23,11 @@ def troca(amostra, tf):
     rd.seed()
     t = 0
     na = []
-    while t <= tf: # O loop está dentro da função ter uma seed fixa
+    while t <= tf: # O loop dentro da função tem uma seed fixa
         index = int(n*rd.random())
-        amostra[index] *= -1 # Índice da bolinha trocada é multiplicado por -1
-        # Para o total de bolinhas: trocar os valores negativos por 0 e somar o array
-        na.append(np.sum(np.where(amostra > 0, amostra, 0)))
+        # Troca de bolinha é representada por subtração de 1 e multiplicação por -1
+        amostra[index] = (amostra[index]-1)*(-1)
+        na.append(np.sum(amostra))
         t += 1
     return na
 
@@ -49,6 +49,6 @@ plt.plot(funcao, label='Resultado analítico', color='red')
 plt.legend()
 plt.xlabel('Tempo')
 plt.ylabel('$N_A$')
-plt.title('Bolinhas na caixa A em função do tempo')
-plt.savefig('grafico_ex1.png',dpi=2000)
+plt.title('Bolinhas na urna A em função do tempo')
+plt.savefig('grafico_ex01.png',dpi=2000)
 plt.show()
