@@ -33,6 +33,7 @@ def pi_circulo(N):
     count = [] # contador de pontos no círculo
     pi_list = [] # lista para a estimativa de pi
     n_list = [] # lista para o número de passos de medição
+    rd.seed()
     for i in range(1,int(N)+1): # int(N) para garantir que será tratado como inteiro
         r1, r2 = rd.random(), rd.random() # números aleatórios
         if r1**2 + r2**2 <= 1: count.append(r2) # ponto cai no círculo
@@ -45,13 +46,24 @@ def pi_circulo(N):
     n_list, pi_list = np.asarray(n_list), np.asarray(pi_list)
     return n_list, pi_list
 #%% Simulação
-N = 1e7
-n_list, pi_list = pi_circulo(N)
+runs = 100
+N = 1e6
+pi_list = []
+for i in range(runs):
+    n, pi_ = pi_circulo(N)
+    pi_list.append(pi_)
+#%%
+n_list = n
+pi_list = np.mean(pi_list,axis=0)
 #%% Gráfico
+plt.figure(figsize=(10,6))
 plt.plot(n_list, pi_list, label='Estimativa')
 plt.hlines(y=pi, xmin=n_list[0], xmax=n_list[-1], ls='--', color='darkred', label='Valor real')
+plt.xlim(n_list[0], n_list[-1])
 plt.ylim(3.14,3.143)
-plt.xlabel('$N \ (10^6)$')
+extratick = [pi]
+plt.yticks(list(plt.yticks()[0])+extratick)
+plt.xlabel('$N$')
 plt.ylabel('Estimativa para $\pi$')
 plt.legend()
 plt.title('Estimativa para $\pi$ pelo método do círculo')

@@ -6,7 +6,6 @@ Created on Tue Jun  6 19:36:18 2023
 """
 
 #%%
-import matplotlib.pyplot as plt
 import numpy as np
 import random as rd
 #%% Funções
@@ -42,6 +41,10 @@ def integracao(f,N,xlim):
 #%% Valores da função
 xlim = [0,1]
 #%% Simulação
-N = 1000000
-integral = integracao(funcao,N,xlim)
+runs = 100
+N_steps = 100000
+integral_media = 0
+for i in range(runs):
+    integral = integracao(funcao,N_steps,xlim)
+    integral_media += integral/runs
 print(integral)
