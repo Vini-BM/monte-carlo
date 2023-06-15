@@ -3,7 +3,7 @@
 """
 Created on Tue Jun  6 11:06:41 2023
 
-@author: vinibaynem
+author: vinibaynem
 """
 #%%
 import matplotlib.pyplot as plt
