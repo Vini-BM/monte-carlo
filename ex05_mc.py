@@ -3,7 +3,7 @@
 """
 Created on Tue Jun  6 11:06:41 2023
 
-author: vinibaynem
+@author: vinibaynem
 """
 #%%
 import matplotlib.pyplot as plt
@@ -70,7 +70,7 @@ plt.legend()
 plt.xlabel('$N \ (10^7)$')
 plt.ylabel('Valor para $\pi$')
 plt.title('Estimativa de $\pi$ em função do número $N$ de agulhas lançadas')
-#plt.savefig('grafico_pi_ex05.png',dpi=1500)
+plt.savefig('grafico_pi_ex05.png',dpi=1500)
 plt.show()
 #%% Fitting no erro
 # Aqui é feito um fitting linear com o logaritmo do erro para encontrar a
@@ -83,7 +83,10 @@ lim = 20
 popt, pcov = curve_fit(reta, n_log[lim:], erro_log[lim:]) # parâmetros, matriz de covariância
 a, b = popt # coeficiente angular, coeficiente linear
 fit = reta(n_log[lim:],a,b) # valores calculados a partir da função com os parâmetros encontrados (para o gráfico)
-print('Coeficiente angular: {}'.format(a))
+saida = open('ex05_fit.txt','w')
+saida.write('Coeficiente angular: {}\n'.format(a))
+saida.write('Coeficiente linear: {}\n'.format(b))
+saida.close()
 #%% Gráfico para o erro
 plt.figure(figsize=(8,4))
 plt.plot(n_log, erro_log)
@@ -91,7 +94,7 @@ plt.plot(n_log[lim:], fit)
 plt.xlim(n_log[0], n_log[-1])
 plt.xlabel('$\ln N$')
 plt.ylabel('$\ln |2N/n - \pi|$')
-#plt.title('Erro na estimativa')
-#plt.savefig('grafico_erro_ex05.png',dpi=1500)
+plt.title('Erro na estimativa')
+plt.savefig('grafico_erro_ex05.png',dpi=1500)
 plt.show()
 
