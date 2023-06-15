@@ -49,7 +49,7 @@ def pi_agulhas(N):
     n_list, pi_list = np.asarray(n_list), np.asarray(pi_list)
     return n_list, pi_list
 #%% Simulação
-runs = 10
+runs = 100
 N = 1e6
 pi_list = []
 for i in range(runs):
@@ -58,8 +58,10 @@ for i in range(runs):
 #print(len(pi_list))
 #pi_list = np.asarray(pi_list)
 n_list, pi_list = n_, np.mean(pi_list,axis=0)
+#%% Estimativa
+print('Estimativa final: pi = {}'.format(pi_list[-1]))
 #%% Gráfico para a estimativa de pi
-plt.figure(figsize=(10,6))
+#plt.figure(figsize=(10,6))
 plt.plot(n_list,pi_list, label='Estimativa')
 plt.xlim(n_list[0], n_list[-1])
 plt.ylim(3.138,3.152)
@@ -67,7 +69,7 @@ plt.hlines(y=pi, xmin=n_list[0], xmax=n_list[-1], ls='--', color='darkred', labe
 extratick = [pi]
 plt.yticks(list(plt.yticks()[0])+extratick)
 plt.legend()
-plt.xlabel('$N \ (10^7)$')
+plt.xlabel('$N$')
 plt.ylabel('Valor para $\pi$')
 plt.title('Estimativa de $\pi$ em função do número $N$ de agulhas lançadas')
 plt.savefig('grafico_pi_ex05.png',dpi=1500)
@@ -79,12 +81,12 @@ erro = np.abs(pi_list-pi)
 n_log, erro_log = np.log(n_list), np.log(erro)
 def reta(x,a,b): # fitting 
     return a*x + b
-lim = 20
+lim = 20 # limite inferior do fit para desconsiderar flutuaçoes, escolhido no olho
 popt, pcov = curve_fit(reta, n_log[lim:], erro_log[lim:]) # parâmetros, matriz de covariância
 a, b = popt # coeficiente angular, coeficiente linear
 fit = reta(n_log[lim:],a,b) # valores calculados a partir da função com os parâmetros encontrados (para o gráfico)
-saida = open('ex05_fit.txt','w')
-saida.write('Coeficiente angular: {}\n'.format(a))
+saida = open('ex05_fit.txt','w') # arquivo com os parametros do fit para nao perder a informaçao no terminal
+saida.write('Coeficiente angular (expoente): {}\n'.format(a))
 saida.write('Coeficiente linear: {}\n'.format(b))
 saida.close()
 #%% Gráfico para o erro
