@@ -91,6 +91,7 @@ plt.plot(n_log[lim:], fit)
 plt.xlim(n_log[0], n_log[-1])
 plt.xlabel('$\ln N$')
 plt.ylabel('$\ln |2N/n - \pi|$')
-plt.title('Erro na estimativa')
+#plt.title('Erro na estimativa')
 #plt.savefig('grafico_erro_ex05.png',dpi=1500)
 plt.show()
+
