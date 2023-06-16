@@ -10,8 +10,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random as rd
 from math import pi
+from time import time
 #%% Função
-def pi_circulo(N):
+def pi_circulo(N,seed=''):
     '''
     Estima o valor de pi por Monte Carlo pelo problema do círculo inscrito.
     Realiza medidas a cada 100 passos.
@@ -21,6 +22,8 @@ def pi_circulo(N):
     ----------
     N : int
         Número de passos da simulação.
+    seed : float
+        Seed da simulação. Se não especificada, é utilizado o timestamp do sistema.
 
     Returns
     -------
@@ -33,10 +36,10 @@ def pi_circulo(N):
     count = 0 # contador de pontos no círculo
     pi_list = [] # lista para a estimativa de pi
     n_list = [] # lista para o número de passos de medição
-    rd.seed() # fixa a seed
+    rd.seed(seed) # fixa a seed
     for i in range(1,int(N)+1): # int(N) para garantir que será tratado como inteiro
         r1, r2 = rd.random(), rd.random() # números aleatórios
-        if r1**2 + r2**2 <= 1: count.append(r2) # ponto cai no círculo
+        if r1**2 + r2**2 <= 1: count += 1 # ponto cai no círculo
         if count > 0 and i % 100 == 0:
             # duas condições para a medição:
             # a. não medir enquanto não houver um ponto dentro do círculo, para evitar divisão por zero
@@ -47,15 +50,23 @@ def pi_circulo(N):
     return n_list, pi_list
 #%% Simulações
 runs = 100 # número de simulações
-N = 1e7 # número de passos
+N = 1e6 # número de passos
 pi_list = [] # lista para as estimativas de cada simulação
+filename = 'ex06.log'
+with open(filename,'w') as saida: # arquivo para escrever os prints
+    saida.write('Exercício 6\n')
 for i in range(runs):
-    n, pi_ = pi_circulo(N)
+    seed = time()
+    n, pi_ = pi_circulo(N,seed)
     pi_list.append(pi_)
+    print(i) # teste do programa
+    with open(filename,'a') as saida:
+        saida.write('Simulação {}, seed = {}, pi = {}\n'.format(i,seed,pi_[-1])) # controle das simulações
 #%% Média sobre as 100 simulações
 n_list = n # a lista de n é a mesma em todas as simulações, basta pegar a última
 pi_list = np.mean(pi_list,axis=0) # média da estimativa sobre as simulações
-print('Estimativa final: pi = {}'.format(pi_list[-1]))
+with open(filename,'a') as saida:
+    saida.write('Estimativa final: pi = {}\n'.format(pi_list[-1]))
 #%% Gráfico
 plt.plot(n_list, pi_list, label='Estimativa')
 plt.hlines(y=pi, xmin=n_list[0], xmax=n_list[-1], ls='--', color='darkred', label='Valor real')

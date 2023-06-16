@@ -30,7 +30,7 @@ def integracao(f,N,xlim,ymax,seed=''):
         Limites de integração.
     ymax: float
         Valor máximo da função no intervalo.
-    seed: int
+    seed: float
         Seed da simulação. Se não especificada, é utilizado o timestamp do sistema.
 
     Returns
@@ -55,34 +55,43 @@ xlim = [0,1] # intervalo de integração
 ymax = 1 # valor máximo do seno
 #%% Simulação: valor da integral em função do tempo
 runs = 10 # numero de simulaçoes
-N = 100000 # número de passos
+N = 1e6 # número de passos
 list_d_runs, list_am_runs = [], [] # listas para as integrais e para o número de passos
+filename = 'ex07.log'
+with open(filename,'w') as saida: # arquivo para escrever os prints
+    saida.write('Exercício 7\n')
 for i in range(runs):
     seed = time() # fixa a seed para a simulaçao
     list_d, list_am, n_list = [], [], []
-    for j in range(100,N+1,100):
+    for j in range(10000,int(N)+1,10000):
         # Calcula (do zero) a integral usando i passos
-        # Começa com 100 passos e vai até N de 100 em 100
+        # Começa com 10000 passos e vai até N de 10000 em 10000
         int_d, int_am = integracao(funcao,j,xlim,ymax,seed)
         list_d.append(int_d)
         list_am.append(int_am)
         n_list.append(j)
+    print(i)
+    with open(filename,'a') as saida:
+        saida.write('Sim. {}, seed = {}, int_d = {}, int_am = {}\n'.format(i,seed,int_d,int_am)) # controle das simulações
     list_d_runs.append(list_d)
     list_am_runs.append(list_am)
 #%% Valores medios
 list_d_media = np.mean(list_d_runs,axis=0)
 list_am_media = np.mean(list_am_runs,axis=0)
 #%% Valores
-print('Amostragem direta: I={}'.format(list_d_media[-1]))
-print('Amostragem média: I={}'.format(list_am_media[-1]))
+with open(filename,'a') as saida:
+    saida.write('\nValores finais:\n')
+    saida.write('Amostragem direta: I={}\n'.format(list_d_media[-1]))
+    saida.write('Amostragem média: I={}\n'.format(list_am_media[-1]))
 #%% Gráfico
-plt.plot(n_list,list_d,label='Amostragem direta: $I = {:.4f}$'.format(list_d_media[-1]),color='darkgreen')
-plt.plot(n_list,list_am,label='Amostragem média: $I = {:.4f}$'.format(list_am_media[-1]),color='darkred')
+int_value = 0.673457
+plt.plot(n_list,list_d_media,label='Amostragem direta',color='darkgreen')
+plt.plot(n_list,list_am_media,label='Amostragem média',color='darkred')
+plt.hlines(int_value, n_list[0], n_list[-1], label='Valor numérico conhecido ({})'.format(int_value),ls='--',color='b')
 plt.xlim(n_list[0],n_list[-1])
-plt.ylim(0.66,0.69)
 plt.legend()
 plt.xlabel('Número de passos')
-plt.ylabel('Valor estimado')
+plt.ylabel('Valor médio estimado')
 plt.title('Integração numérica em função do número de passos')
 plt.savefig('grafico_ex07.png', dpi=1500)
 plt.show()

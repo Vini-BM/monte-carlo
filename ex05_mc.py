@@ -11,8 +11,9 @@ import numpy as np
 import random as rd
 from scipy.optimize import curve_fit
 from math import pi
-#%%
-def pi_agulhas(N):
+from time import time
+#%% Função
+def pi_agulhas(N,seed=''):
     '''
     Estima o valor de pi pelo problema das agulhas de Buffon.
     Realiza medidas a cada 100 passos.
@@ -25,7 +26,9 @@ def pi_agulhas(N):
     ----------
     N : int
         Número de passos da simulação.
-
+    seed : float
+        Seed da simulação. Se não especificada, é utilizado o timestamp do sistema.
+        
     Returns
     -------
     n_list : array
@@ -36,6 +39,7 @@ def pi_agulhas(N):
     count = 0 # contador de agulhas que cruzam uma linha
     pi_list = [] # lista para a estimativa de pi
     n_list = [] # lista para o número de passos de medição
+    rd.seed(seed) # fixa a seed da simulação
     for i in range(1,int(N)+1): # int(N) para garantir que será tratado como inteiro
         r1 = rd.random() * pi # número aleatório de 0 a pi
         r2 = rd.random() # número aleatório de 0 a 1
@@ -52,27 +56,31 @@ def pi_agulhas(N):
 runs = 100
 N = 1e6
 pi_list = []
+filename = 'ex05.log'
+with open(filename,'w') as saida: # arquivo para escrever os prints
+    saida.write('Exercício 5\n')
 for i in range(runs):
-    n_, pi_ = pi_agulhas(N)
+    seed = time()
+    n_, pi_ = pi_agulhas(N,seed)
     pi_list.append(pi_)
-#print(len(pi_list))
-#pi_list = np.asarray(pi_list)
+    print(i) # teste do programa
+    with open(filename,'a') as saida:
+        saida.write('Simulação {}, seed = {}, pi = {}\n'.format(i,seed,pi_[-1])) # controle das simulações
 n_list, pi_list = n_, np.mean(pi_list,axis=0)
-#%% Estimativa
-print('Estimativa final: pi = {}'.format(pi_list[-1]))
+with open(filename,'a') as saida:
+	print('Estimativa final: pi = {}\n'.format(pi_list[-1]), file=saida) # estimativa final
 #%% Gráfico para a estimativa de pi
-#plt.figure(figsize=(10,6))
 plt.plot(n_list,pi_list, label='Estimativa')
 plt.xlim(n_list[0], n_list[-1])
-plt.ylim(3.138,3.152)
+plt.ylim(3.138,3.148)
+extra = [pi]
+plt.yticks(list(plt.yticks()[0])+extra)
 plt.hlines(y=pi, xmin=n_list[0], xmax=n_list[-1], ls='--', color='darkred', label='Valor real')
-extratick = [pi]
-plt.yticks(list(plt.yticks()[0])+extratick)
 plt.legend()
 plt.xlabel('$N$')
 plt.ylabel('Valor para $\pi$')
 plt.title('Estimativa de $\pi$ em função do número $N$ de agulhas lançadas')
-plt.savefig('grafico_pi_ex05.png',dpi=1500)
+plt.savefig('grafico_ex05_pi.png',dpi=1500)
 plt.show()
 #%% Fitting no erro
 # Aqui é feito um fitting linear com o logaritmo do erro para encontrar a
@@ -81,22 +89,21 @@ erro = np.abs(pi_list-pi)
 n_log, erro_log = np.log(n_list), np.log(erro)
 def reta(x,a,b): # fitting 
     return a*x + b
-lim = 20 # limite inferior do fit para desconsiderar flutuaçoes, escolhido no olho
+lim = 20 # limite inferior do fit para desconsiderar flutuações, escolhido no olho
 popt, pcov = curve_fit(reta, n_log[lim:], erro_log[lim:]) # parâmetros, matriz de covariância
 a, b = popt # coeficiente angular, coeficiente linear
 fit = reta(n_log[lim:],a,b) # valores calculados a partir da função com os parâmetros encontrados (para o gráfico)
-saida = open('ex05_fit.txt','w') # arquivo com os parametros do fit para nao perder a informaçao no terminal
-saida.write('Coeficiente angular (expoente): {}\n'.format(a))
-saida.write('Coeficiente linear: {}\n'.format(b))
-saida.close()
+with open(filename,'a') as saida:
+    saida.write('\nFit do erro na escala logarítmica:\n')
+    saida.write('Coeficiente angular: {}\n'.format(a))
+    saida.write('Coeficiente linear: {}\n'.format(b))
 #%% Gráfico para o erro
-plt.figure(figsize=(8,4))
 plt.plot(n_log, erro_log)
-plt.plot(n_log[lim:], fit)
+plt.plot(n_log[lim:], fit, label='Ajuste linear\n(Coeficiente angular = {:.3f})'.format(a))
 plt.xlim(n_log[0], n_log[-1])
+plt.legend()
 plt.xlabel('$\ln N$')
 plt.ylabel('$\ln |2N/n - \pi|$')
 plt.title('Erro na estimativa')
-plt.savefig('grafico_erro_ex05.png',dpi=1500)
+plt.savefig('grafico_ex05_erro.png',dpi=1500)
 plt.show()
-
