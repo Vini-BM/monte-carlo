@@ -26,7 +26,7 @@ def troca(amostra, tf, seed=''):
         no índice i é indicada por 1, e a ausência, por 0.
     tf : int
         Número de passos (tempo discretizado) da simulação
-    seed : int (opcional)
+    seed : float (opcional)
         Seed para o gerador de números aleatórios. Caso não especificada, será
         usado o valor padrão da função (timestamp do sistema).
         
@@ -48,7 +48,7 @@ def troca(amostra, tf, seed=''):
     na_list = [] # lista para o número de bolinhas em A
     while t <= tf:
         index = int(n*rd.random()) # sorteia um número aleatório de 0 a 99
-        amostra[index] = (amostra[index]-1)*(-1) # troca de bolinha representada por subtração de 1 e multiplicação por -1
+        amostra[index] = 1-amostra[index] # troca de bolinha
         soma = np.sum(amostra) # soma dos elementos = Na
         na_list.append(soma) # adiciona Na do instante correspondente à lista
         if t % 101 == 0: # 101 pelo problema da paridade
