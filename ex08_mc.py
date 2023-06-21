@@ -12,88 +12,79 @@ import random as rd
 #from math import pi
 #%% Função
 def pi_markov_rej(N):
-    '''
-    
-    Parameters
-    ----------
-    N : int
-        Número de passos da simulação.
+	'''
 
-    Returns
-    -------
+	Parameters
+	----------
+	N : int
+		Número de passos da simulação.
 
-    '''
-    count = 0 # contador de pontos no círculo
-    pi_list = [] # lista para a estimativa de pi
-    n_list = [] # lista para o número de passos de medição
-    rd.seed() # fixa a seed
-    x, y, step = 0, 0, 1
-    while step <= N:
-        r1, r2 = rd.random()*0.3, rd.random()*2*np.pi # números aleatórios
-        xn = x+r1*np.cos(r2)
-        yn = y+r1*np.sin(r2)
-        if xn>1 or xn<0 or yn>1 or yn<0: # ponto cai fora do quadrado
-            continue 
-        elif (xn)**2 + (yn)**2 <= 1: # ponto cai no círculo
-            count += 1
-            x = xn
-            y = yn
-            step += 1
-        else: # ponto cai fora do círculo, dentro do quadrado
-            x = xn
-            y = yn
-            step += 1
-        if step % 100 == 0: # medir a cada 100 passos
-            pi_list.append(count/step) # adiciona a estimativa de pi na lista
-            n_list.append(step) # adiciona a contagem do passo usado na medição na lista
-            print(step)
-    n_list, pi_list = np.asarray(n_list), np.asarray(pi_list)
-    return n_list, pi_list
+	Returns
+	-------
+
+	'''
+	count = 0 # contador de pontos no círculo
+	pi_list = [] # lista para a estimativa de pi
+	n_list = [] # lista para o número de passos de medição
+	rd.seed() # fixa a seed
+	x, y, step = 0, 0, 1
+	while step <= N:
+		r1, r2 = rd.random()*0.3, rd.random()*2*np.pi # números aleatórios
+		xn = x+r1*np.cos(r2)
+		yn = y+r1*np.sin(r2)
+		if 0<=xn<=1 and 0<=yn<=1: # ponto cai dentro do quadrado
+			step += 1
+			if xn**2 + yn**2 <= 1: # ponto cai dentro do círculo
+				count += 1
+			x = xn
+			y = yn
+		else: # ponto cai fora do quadrado
+			continue
+		if step % 100 == 0: # medir a cada 100 passos
+			pi_list.append(count/step) # adiciona a estimativa de pi na lista
+			n_list.append(step) # adiciona a contagem do passo usado na medição na lista
+			print(step)
+	n_list, pi_list = np.asarray(n_list), np.asarray(pi_list)
+	return n_list, pi_list
 
 def pi_markov_sr(N):
-    '''
-    
-    Parameters
-    ----------
-    N : int
-        Número de passos da simulação.
+	'''
 
-    Returns
-    -------
+	Parameters
+	----------
+	N : int
+		Número de passos da simulação.
 
-    '''
-    count = 0 # contador de pontos no círculo
-    pi_list = [] # lista para a estimativa de pi
-    n_list = [] # lista para o número de passos de medição
-    rd.seed() # fixa a seed
-    x, y, step = 0.5, 0.5, 1
-    while step <= N:
-        r1, r2 = rd.random()*0.3, rd.random()*2*np.pi # números aleatórios
-        xn = x+r1*np.cos(r2)
-        yn = y+r1*np.sin(r2)
-        if xn>1 or xn<0 or yn>1 or yn<0: # ponto cai fora do quadrado, mas anterior está no círculo
-            if (x)**2 + (y)**2 <= 1:
-                step += 1
-                count += 1
-            else:
-                step += 1
-        elif xn**2 + yn**2 <= 1:
-            count += 1
-            x = xn
-            y = yn
-            step += 1
-        else: # ponto cai fora do círculo, dentro do quadrado
-            x = xn
-            y = yn
-            step += 1
-        if step % 100 == 0: # medir a cada 100 passos
-            pi_list.append(count/step) # adiciona a estimativa de pi na lista
-            n_list.append(step) # adiciona a contagem do passo usado na medição na lista
-            print(step)
-    n_list, pi_list = np.asarray(n_list), np.asarray(pi_list)
-    return n_list, pi_list
+	Returns
+	-------
 
-N = 1e6    
+	'''
+	count = 0 # contador de pontos no círculo
+	pi_list = [] # lista para a estimativa de pi
+	n_list = [] # lista para o número de passos de medição
+	rd.seed() # fixa a seed
+	x, y, step = 0.5, 0.5, 1
+	while step <= N:
+		r1, r2 = rd.random()*0.3, rd.random()*2*np.pi # números aleatórios
+		xn = x+r1*np.cos(r2)
+		yn = y+r1*np.sin(r2)
+		if 0<=xn<=1 and 0<=yn<=1: # ponto cai dentro do quadrado
+			step += 1
+			if xn**2 + yn**2 <= 1: # ponto cai dentro do círculo
+				count += 1
+			x = xn
+			y = yn
+		else: # ponto cai fora do quadrado
+			step += 1
+			if (x)**2 + (y)**2 <= 1: count += 1 # ponto anterior está no círculo
+		if step % 100 == 0: # medir a cada 100 passos
+			pi_list.append(count/step) # adiciona a estimativa de pi na lista
+			n_list.append(step) # adiciona a contagem do passo usado na medição na lista
+			print(step)
+	n_list, pi_list = np.asarray(n_list), np.asarray(pi_list)
+	return n_list, pi_list
+
+N = 1e5    
 nr, pir = pi_markov_rej(N)
 ns, pis = pi_markov_sr(N)
 plt.plot(nr,pir,label='Com rejeição')
@@ -108,4 +99,5 @@ plt.legend()
 plt.title('Estimativa de $\pi/4$ por processo markoviano')
 plt.ylabel('$n/N$')
 plt.xlabel('$N$')
+plt.savefig('grafico_ex08.png', dpi=1500)
 plt.show()
