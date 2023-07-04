@@ -30,8 +30,8 @@ def amostragem_direta(N,funcao,gamma,zeta,seed=''):
 
 # Simulação
 N = 1e5
-gamma = 0.2
-zeta = -0.2
+gamma = 0.8
+zeta = -0.7
 n, int_p, int_n, p_analitico, n_analitico = amostragem_direta(N,integrando,gamma,zeta)
 
 #print(int_p)
@@ -41,7 +41,7 @@ n, int_p, int_n, p_analitico, n_analitico = amostragem_direta(N,integrando,gamma
 plt.plot(n, int_p, label='Integral numérica', color='darkred', lw=1)
 plt.hlines(p_analitico, xmin=0, xmax=N, label='Integral analítica', color='darkgreen', lw=1.5)
 #plt.xlim(0,100)
-#plt.ylim(0.5,0.6)
+plt.ylim(0.5,0.6)
 plt.title('Convergência da integral por amostragem direta')
 plt.xlabel('$N$')
 plt.ylabel('$I({})$'.format(gamma))
@@ -50,9 +50,9 @@ plt.show()
 
 # Gráfico para gamma negativo
 plt.plot(n, int_n, label='Integral numérica', color='darkred', lw=1)
-#plt.hlines(n_analitico, xmin=0, xmax=N, label='Integral analítica', color='darkgreen', lw=1.5)
+plt.hlines(n_analitico, xmin=0, xmax=N, label='Integral analítica', color='darkgreen', lw=1.5)
 #plt.xlim(0,100)
-#plt.ylim(4.2,5.2)
+plt.ylim(4.2,5.2)
 plt.title('Convergência da integral por amostragem direta')
 plt.xlabel('$N$')
 plt.ylabel('$I({})$'.format(-1*gamma))
