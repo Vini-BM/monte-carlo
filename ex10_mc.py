@@ -34,27 +34,29 @@ gamma = 0.8
 zeta = -0.7
 n, int_p, int_n, p_analitico, n_analitico = amostragem_direta(N,integrando,gamma,zeta)
 
-#print(int_p)
-#print(int_n)
+# Simulação da amostragem direta
+n_d, int_p_d, int_n_d, p_analitico_d, n_analitico_d = amostragem_direta(N,integrando,gamma,0)
+
 
 # Gráfico para gamma positivo
-plt.plot(n, int_p, label='Integral numérica', color='darkred', lw=1)
+plt.plot(n, int_p, label='Amostragem por relevância', color='darkred', lw=1)
+plt.plot(n, int_p_d, label='Amostragem direta', color='darkblue', lw=1)
 plt.hlines(p_analitico, xmin=0, xmax=N, label='Integral analítica', color='darkgreen', lw=1.5)
-#plt.xlim(0,100)
 plt.ylim(0.5,0.6)
-plt.title('Convergência da integral por amostragem direta')
+plt.title('Convergência da integral')
 plt.xlabel('$N$')
 plt.ylabel('$I({})$'.format(gamma))
 plt.legend()
 plt.show()
 
 # Gráfico para gamma negativo
-plt.plot(n, int_n, label='Integral numérica', color='darkred', lw=1)
+plt.plot(n, int_n, label='Amostragem por relevância', color='darkred', lw=1)
+plt.plot(n, int_n_d, label='Amostragem direta', color='darkblue', lw=1)
 plt.hlines(n_analitico, xmin=0, xmax=N, label='Integral analítica', color='darkgreen', lw=1.5)
-#plt.xlim(0,100)
 plt.ylim(4.2,5.2)
-plt.title('Convergência da integral por amostragem direta')
+plt.title('Convergência da integral')
 plt.xlabel('$N$')
 plt.ylabel('$I({})$'.format(-1*gamma))
 plt.legend()
+plt.savefig('grafico_ex11_7.png',dpi=1500)
 plt.show()
