@@ -129,7 +129,7 @@ def pi_markov_sr(N,seed,file=True):
 
 
 # Simulação
-N = 1e4
+N = 1e6
 ## Amostra 1
 seed1 = time()
 nr1, pir1, xr1, yr1 = pi_markov_rej(N,seed1) # rejeição
@@ -140,10 +140,10 @@ nr2, pir2, xr2, yr2 = pi_markov_rej(N,seed2) # rejeição
 ns2, pis2, xs2, ys2 = pi_markov_sr(N,seed2) # sem rejeição
 
 # Gráfico
-plt.plot(nr1,pir1,label='Com rejeição ({})'.format(seed1))
-plt.plot(nr2,pir2,label='Com rejeição ({})'.format(seed2))
-plt.plot(ns1,pis1,label='Sem rejeição ({})'.format(seed1))
-plt.plot(ns2,pis2,label='Sem rejeição ({})'.format(seed2))
+plt.plot(nr1,pir1,label='Com rejeição ({})'.format(seed1),color='orange')
+plt.plot(nr2,pir2,label='Com rejeição ({})'.format(seed2),color='blue')
+plt.plot(ns1,pis1,label='Sem rejeição ({})'.format(seed1),color='red')
+plt.plot(ns2,pis2,label='Sem rejeição ({})'.format(seed2),color='green')
 plt.hlines(np.pi/4, nr1[0], nr1[-1], ls='--', color='darkred')
 num_ticks = list(plt.yticks()[0]) + [np.pi/4]
 str_ticks = list(plt.yticks()[1]) + ['$\pi/4$']
@@ -154,25 +154,27 @@ plt.legend()
 plt.title('Estimativa de $\pi/4$ por processo markoviano')
 plt.ylabel('$n/N$')
 plt.xlabel('$N$')
-#plt.savefig('grafico_ex08.png', dpi=1500)
+plt.savefig('grafico_ex08.png', dpi=1500)
 plt.show()
 
 # Histograma com rejeição
-plt.hist(xr1,bins=100,label='Seed = {}'.format(seed1))
-plt.hist(xr2,bins=100,label='Seed = {}'.format(seed2))
+plt.hist(xr1,bins=100,label='Seed = {}'.format(seed1),color='orange')
+plt.hist(xr2,bins=100,label='Seed = {}'.format(seed2),color='blue')
 plt.xlabel('Coordenada x')
 plt.ylabel('Contagem')
 plt.title('Contagem da coordenada $x$ com rejeição')
 plt.legend()
+plt.savefig('hist_rej_ex08.png', dpi=1500)
 plt.show()
 
 # Histograma sem rejeição
-plt.hist(xs1,bins=100,label='Seed = {}'.format(seed1))
-plt.hist(xs2,bins=100,label='Seed = {}'.format(seed2))
+plt.hist(xs1,bins=100,label='Seed = {}'.format(seed1),color='red')
+plt.hist(xs2,bins=100,label='Seed = {}'.format(seed2),color='green')
 plt.xlabel('Coordenada x')
 plt.ylabel('Contagem')
 plt.title('Contagem da coordenada $x$ sem rejeição')
 plt.legend()
+plt.savefig('hist_sr_ex08.png', dpi=1500)
 plt.show()
 
 # Média de amostras
