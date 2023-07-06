@@ -122,13 +122,13 @@ def pi_markov_sr(N,seed,file=True):
 N = int(1e6)
 file_rej = 'ex08_media_pi_rej.txt'
 file_sem = 'ex08_media_pi_sem.txt'
-saida_rej = open(file_rej,'w')
+saida_rej = open(file_rej,'a')
 saida_rej.write('# Média da estimativa final de pi pelo método com rejeição após {} passos\n'.format(N))
 saida_rej.write('# amostra    seed    pi/4\n')
-saida_sem = open(file_sem,'w')
+saida_sem = open(file_sem,'a')
 saida_sem.write('# Média da estimativa final de pi pelo método sem rejeição após {} passos\n'.format(N))
 saida_sem.write('# amostra    seed    pi/4\n')
-for i in range(100): # 100 amostras diferentes
+for i in range(1000): # 1000 amostras diferentes
     seed = time()
     nr, pir, xr, yr = pi_markov_rej(N,seed,file=False) # rejeição
     saida_rej.write('{}    {}    {}\n'.format(i,seed,pir[-1]))
