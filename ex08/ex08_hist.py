@@ -119,9 +119,10 @@ def pi_markov_sr(N,seed,file=True):
     return n_list, pi_list, x_list, y_list
 
 # Média de amostras
-N = int(1e6)
-file_rej = 'ex08_media_pi_rej.txt'
-file_sem = 'ex08_media_pi_sem.txt'
+pot = 5
+N = int(10**pot)
+file_rej = 'media_pi_rej_10{}.txt'.format(pot)
+file_sem = 'media_pi_sem_10{}.txt'.format(pot)
 saida_rej = open(file_rej,'a')
 saida_rej.write('# Média da estimativa final de pi pelo método com rejeição após {} passos\n'.format(N))
 saida_rej.write('# amostra    seed    pi/4\n')
