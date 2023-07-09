@@ -4,7 +4,7 @@ import random as rd
 from time import time
 
 #%% Função
-def pi_markov_rej(N,seed,file=True):
+def pi_markov_rej(N,seed):
     '''
     Parameters
     ----------
@@ -12,8 +12,6 @@ def pi_markov_rej(N,seed,file=True):
     	    Número de passos de contagem da simulação
     seed : float
 	    Seed para a simulação
-    file : boolean
-	    Decide se escreve a saída em um arquivo ou não
 	
     Returns
     -------
@@ -51,16 +49,9 @@ def pi_markov_rej(N,seed,file=True):
         n_list.append(step) # adiciona a contagem do passo usado na medição na lista
         print(step)
     n_list, pi_list = np.asarray(n_list), np.asarray(pi_list)
-    # Escrever em arquivos
-    if file:
-        with open('ex08_rej_{}.txt'.format(seed),'w') as saida:
-            saida.write('# Simulação com rejeição com seed {}\n'.format(seed))
-            saida.write('# n    pi/4    x    y\n')
-            for i in range(len(n_list),step=100):
-               saida.write('{}    {}    {}    {}\n'.format(n_list[i],pi_list[i],x_list[i],y_list[i]))
     return n_list, pi_list, x_list, y_list
 
-def pi_markov_sr(N,seed,file=True):
+def pi_markov_sr(N,seed):
     '''
     Parameters
     ----------
@@ -68,8 +59,6 @@ def pi_markov_sr(N,seed,file=True):
         Número de passos de contagem da simulação
     seed : float
         Seed para a simulação
-    file : boolean
-        Decide se escreve a saída em um arquivo ou não
 
     Returns
     -------
@@ -109,13 +98,6 @@ def pi_markov_sr(N,seed,file=True):
         n_list.append(step) # adiciona a contagem do passo usado na medição na lista
         print(step)
     n_list, pi_list = np.asarray(n_list), np.asarray(pi_list)
-    # Escrever em arquivos
-    if file:
-        with open('ex08_sem_{}.txt'.format(seed),'w') as saida:
-            saida.write('# Simulação sem rejeição com seed {}\n'.format(seed))
-            saida.write('# n    pi/4    x    y\n')
-            for i in range(len(n_list),step=100):
-                saida.write('{}    {}     {}     {}\n'.format(n_list[i],pi_list[i],x_list[i],y_list[i]))
     return n_list, pi_list, x_list, y_list
 
 # Média de amostras
@@ -131,9 +113,9 @@ saida_sem.write('# Média da estimativa final de pi pelo método sem rejeição 
 saida_sem.write('# amostra    seed    pi/4\n')
 for i in range(1000): # 1000 amostras diferentes
     seed = time()
-    nr, pir, xr, yr = pi_markov_rej(N,seed,file=False) # rejeição
+    nr, pir, xr, yr = pi_markov_rej(N,seed) # rejeição
     saida_rej.write('{}    {}    {}\n'.format(i,seed,pir[-1]))
-    ns, pis, xs, ys = pi_markov_sr(N,seed,file=False) # sem rejeição
+    ns, pis, xs, ys = pi_markov_sr(N,seed) # sem rejeição
     saida_sem.write('{}    {}    {}\n'.format(i,seed,pis[-1]))
 saida_rej.close()
 saida_sem.close()

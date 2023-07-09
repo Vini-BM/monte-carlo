@@ -3,6 +3,12 @@ import numpy as np
 from glob import glob
 from math import pi
 
+# Fonte para os gráficos
+plt.rcParams.update({
+    'font.family': 'serif',
+	'mathtext.fontset': 'cm'
+})
+
 rej_files = glob('sim_rej_*') # lista de arquivos com rejeição
 sem_files = glob('sim_sem_*') # lista de arquivos sem rejeição
 
@@ -64,7 +70,7 @@ ax.hist(xs2,bins=bins,color=sem_color) # sem rejeição 2
 ax.set_xlim(0,1)
 
 fig.suptitle('Distribuição da coordenada $x$ nos métodos com e sem rejeição') # título geral
-fig.supxlabel('Coordenada x')
+fig.supxlabel('$x$')
 fig.supylabel('Contagem')
 
 plt.savefig('hist_coordenada_ex08.png', dpi=1500)

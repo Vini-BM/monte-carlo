@@ -2,6 +2,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random as rd
 
+# Fonte para os gráficos
+plt.rcParams.update({
+    'font.family': 'serif',
+	'mathtext.fontset': 'cm'
+})
+
 # Exemplo 5
 N = int(1e5)
 px5 = []
@@ -38,7 +44,7 @@ plt.xlim(0.01,1)
 plt.ylim(ymax=10)
 plt.xlabel('$x$')
 plt.ylabel('$p(x)$')
-plt.title('Distribuição de probabilidade $p(x) = (1 - \\tau)x^{-0.4}$')
+plt.title('Distribuição de probabilidade $p(x) = (1 - \\tau)x^\\tau$ para $\\tau = {}$'.format(tau))
 plt.legend()
 plt.xscale('log')
 plt.yscale('log')
