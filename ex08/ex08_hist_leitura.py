@@ -32,10 +32,10 @@ num_bins_r = len(pir_value)
 
 # Fit
 
-media_r = np.mean(pir_value)
-media_s = np.mean(pis_value)
-dp_r = np.sqrt(np.var(pir_value)/(len(pir_value)-1))
-dp_s = np.sqrt(np.var(pis_value)/(len(pis_value)-1))
+media_r = np.mean(pir)
+media_s = np.mean(pis)
+dp_r = np.sqrt(np.var(pir)/(len(pir)-1))
+dp_s = np.sqrt(np.var(pis)/(len(pis)-1))
 #xr = np.linspace(pir_value[0],pir_value[-1],num=100)
 #xs = np.linspace(pis_value[0],pis_value[-1],num=100)
 #yr = gaussiana(xr,media_r,dp_r)*bins*num_bins_r
@@ -65,7 +65,7 @@ newlabels = np.around(np.copy(locs),3)
 newlabels = np.append(newlabels,'$\pi$') # Se simplesmente adicionar a label em latex, as outras labels vão sumir
 #ax.set_xticks(newlocs,labels=newlabels)
 ax.set_xlim(locs[0],locs[-1])
-ax.text(locs[1], locsy[3], '$\\bar x = {:.3f} \\pm {:.3f}$'.format(media_r,dp_r), color='darkred', fontsize=12)
+ax.text(locs[1], locsy[3], '$\\bar x = {:.4f} \\pm {:.4f}$'.format(media_r,dp_r), color='darkred', fontsize=12)
 ax.legend()
 ax.set_title('Com rejeição')
 
@@ -81,7 +81,7 @@ newlabels = np.around(np.copy(locs),3)
 newlabels = np.append(newlabels,'$\pi$') # Se simplesmente adicionar a label em latex, as outras labels vão sumir
 ax.set_xticks(newlocs,labels=newlabels)
 ax.set_xlim(locs[0],locs[-1])
-ax.text(locs[1], locsy[2], '$\\bar x = {:.3f} \\pm {:.3f}$'.format(media_s,dp_s), color='darkred', fontsize=12)
+ax.text(locs[1], locsy[2], '$\\bar x = {:.4f} \\pm {:.4f}$'.format(media_s,dp_s), color='darkred', fontsize=12)
 ax.legend()
 ax.set_title('Sem rejeição')
 
