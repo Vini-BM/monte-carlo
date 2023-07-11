@@ -129,11 +129,9 @@ def pi_markov_sr(N,seed,file=True):
 
 # Simulação
 N = 1e6
-## Amostra 1
-seed1 = time()
-nr1, pir1, xr1, yr1 = pi_markov_rej(N,seed1) # rejeição
-ns1, pis1, xs1, ys1 = pi_markov_sr(N,seed1) # sem rejeição
-## Amostra 2
-seed2 = time()
-nr2, pir2, xr2, yr2 = pi_markov_rej(N,seed2) # rejeição
-ns2, pis2, xs2, ys2 = pi_markov_sr(N,seed2) # sem rejeição
+n = 10
+for i in range(n):
+    seed = time()
+    nr, pir, xr, yr = pi_markov_rej(N,seed) # rejeição
+    ns, pis, xs, ys = pi_markov_sr(N,seed) # sem rejeição
+
