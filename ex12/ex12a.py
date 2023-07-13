@@ -28,21 +28,22 @@ class walker():
             self.y += self.passo
 
 # Simulação:
-walkerlist = list(walker(i) for i in range(10))
-xlist_g, ylist_g = [], []
-tf = 1000
+walkerlist = list(walker(i) for i in range(100))
+xlist_g, ylist_g, sd_g = [], [], []
+tf = 10000
 for cam in walkerlist:
-    xlist, ylist = [cam.x], [cam.y]
+    file = open(f'walker{cam.id:02}.txt', 'w')
+    file.write('# caminhante aleatório 2D \n')
+    file.write('# tempo    x    y \n')
+    xlist, ylist, sd = [cam.x], [cam.y], [cam.x**2 + cam.y**2]
     for i in range(tf):
         cam.move()
         xlist.append(cam.x)
         ylist.append(cam.y)
+        sd.append(cam.x**2 + cam.y**2)
+        file.write(f'{i}    {cam.x}    {cam.y} \n')
     xlist_g.append(xlist)
     ylist_g.append(ylist)
-# Gráficos
-#limx, limy = max(np.abs(xlist)), max(np.abs(ylist))
-for xlist, ylist in zip(xlist_g,ylist_g):
-    plt.plot(xlist,ylist)
-#plt.xlim(-limx,limx)
-#plt.ylim(-limy,limy)
-plt.show()
+    sd_g.append(sd)
+    file.close()
+
