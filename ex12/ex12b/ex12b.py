@@ -6,9 +6,9 @@ from random import randint
 # ---------- Definindo caminhante ----------
 
 class lattice_walker():
-    def __init__(self,ident,lattice_neighbor):
-        self.id, self.rede = ident, lattice_neighbor
-        self.L = int(np.sqrt(len(lattice_neighbor)))
+    def __init__(self,ident,lattice):
+        self.id, self.rede = ident, lattice
+        self.L = int(np.sqrt(len(lattice)))
         self.site = randint(0,self.L**2-1) # sítio inicial (randint é inclusivo nos extremos, então o limite deve ser L**2 - 1)
         self.x, self.y = self.site%self.L, self.site//self.L # coordenadas do sítio inicial, x é o módulo da divisão do sítio por L e y é o resultado inteiro da divisão do sítio por L (pela construção da matriz)
     def move(self):
@@ -22,7 +22,7 @@ def make_lattice(L):
     N = L**2 # número de sítios
     
     # ---------- MATRIZ DE VIZINHANÇA ----------
-    vizinhanca = np.zeros((N,5)) # inicializa a matriz
+    vizinhanca = np.zeros((N,6)) # inicializa a matriz
     
     # ---------- Notação ----------
     # Sentido horário:
@@ -31,6 +31,7 @@ def make_lattice(L):
         # [i][2] abaixo
         # [i][3] esquerda
         # [i][4] acima
+        # [i][5] ocupação
 
     # ---------- Loop para criar a vizinhança ----------
     for i in range(N):
@@ -69,6 +70,9 @@ def make_lattice(L):
             vizinhanca[i][4] = i-L+N # vai para a última linha
         else: # demais linhas -> descontar L
             vizinhanca[i][4] = i-L
+        
+        # ---------- Ocupação ----------
+        vizinhanca[i][5] = False # rede começa desocupada
     
     # ---------- MATRIZ DA REDE ----------
     # Criei a matriz que representa a rede, mas ela não é necessária para a simulação
@@ -88,7 +92,7 @@ def make_lattice(L):
 # Parâmetros:
 L = 20 # tamanho da rede
 viz, lat = make_lattice(L) # matriz de vizinhança, matriz da rede
-num_walkers = 50
+num_walkers = 100
 # Inicialização:
 camlist = [lattice_walker(i,viz) for i in range(num_walkers)]
 #sitelist_global, xlist_global, ylist_global
@@ -98,7 +102,7 @@ for cam in camlist:
     output.write('# tempo  x   y   sítio \n')
     site0, x0, y0 = cam.site, cam.x, cam.y
     output.write(f'0    {x0}    {y0}    {site0} \n')
-    tf = 10000
+    tf = 1000
     for t in range(1,tf):
         cam.move()
         output.write(f'{t}    {cam.x}    {cam.y}    {cam.site} \n')
