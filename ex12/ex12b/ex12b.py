@@ -72,38 +72,39 @@ def make_lattice(L):
             vizinhanca[i][4] = i-L
         
         # ---------- Ocupação ----------
-        vizinhanca[i][5] = False # rede começa desocupada
+        vizinhanca[i][5] = 0 # rede começa desocupada
     
     # ---------- MATRIZ DA REDE ----------
     # Criei a matriz que representa a rede, mas ela não é necessária para a simulação
     # Deixei o código aqui caso seja preciso em outra aplicação
-    lattice_matrix = np.zeros((L,L))
-    for x in range(L):
-        for y in range(L):
-            lattice_matrix[y][x] = x + L*y # a matriz é transposta para reproduzir corretamente a vizinhança
-            
+    #lattice_matrix = np.zeros((L,L))
+    #for x in range(L):
+    #    for y in range(L):
+    #        lattice_matrix[y][x] = x + L*y # a matriz é transposta para reproduzir corretamente a vizinhança
+    #        
     vizinhanca = vizinhanca.astype('int')
-    lattice_matrix = lattice_matrix.astype('int')
-    return vizinhanca, lattice_matrix
+    #lattice_matrix = lattice_matrix.astype('int')
+    return vizinhanca
 
 
 # ---------- Simulação ----------
 
-# Parâmetros:
-L = 20 # tamanho da rede
-viz, lat = make_lattice(L) # matriz de vizinhança, matriz da rede
-num_walkers = 100
-# Inicialização:
-camlist = [lattice_walker(i,viz) for i in range(num_walkers)]
-#sitelist_global, xlist_global, ylist_global
-for cam in camlist:
-    output = open(f'latticewalker{cam.id:02}.txt', 'w')
-    output.write(f'# caminhante aleatório em matriz {L}x{L} \n')
-    output.write('# tempo  x   y   sítio \n')
-    site0, x0, y0 = cam.site, cam.x, cam.y
-    output.write(f'0    {x0}    {y0}    {site0} \n')
-    tf = 1000
-    for t in range(1,tf):
-        cam.move()
-        output.write(f'{t}    {cam.x}    {cam.y}    {cam.site} \n')
-    output.close()
+if __name__ == '__main__':
+    # Parâmetros:
+    L = 20 # tamanho da rede
+    viz = make_lattice(L) # matriz de vizinhança, matriz da rede
+    num_walkers = 100
+    # Inicialização:
+    camlist = [lattice_walker(i,viz) for i in range(num_walkers)]
+    #sitelist_global, xlist_global, ylist_global
+    for cam in camlist:
+        output = open(f'latticewalker{cam.id:02}.txt', 'w')
+        output.write(f'# caminhante aleatório em matriz {L}x{L} \n')
+        output.write('# tempo  x   y   sítio \n')
+        site0, x0, y0 = cam.site, cam.x, cam.y
+        output.write(f'0    {x0}    {y0}    {site0} \n')
+        tf = 1000
+        for t in range(1,tf):
+            cam.move()
+            output.write(f'{t}    {cam.x}    {cam.y}    {cam.site} \n')
+        output.close()
