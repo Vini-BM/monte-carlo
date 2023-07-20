@@ -7,21 +7,26 @@ sys.path.insert(0, '../ex12b')
 from ex12b import lattice_walker, make_lattice
 
 class saw_walker(lattice_walker):
+    def __init__(self,ident,lattice):
+        lattice_walker.__init__(self,ident,lattice)
+        self.occupation = np.zeros(self.N) # matriz de ocupação
     def move(self):
-        self.rede[self.site][5] = 1
+        self.occupation[self.site] = 1
         neighbors = [self.rede[self.site][i] for i in range(1,4)]
         options = []
         stop = False
         for neighbor in neighbors:
-            if self.rede[neighbor][5] == 0:
+            if self.occupation[neighbor] == 0:
                 options.append(neighbor)
-        try:
-            newsite = choice(options) # nova posição é o vizinho na direção sorteada
-            self.rede[newsite][5] = 1
-            self.site, self.x, self.y = newsite, newsite%self.L, newsite//self.L
-        except IndexError:
+            else:
+                options.append(self.site)
+        if all(sites == self.site for sites in options):
             stop = True
+        newsite = choice(options) # nova posição é o vizinho na direção sorteada ou o caminhante continua na mesma posição
+        self.occupation[newsite] = 1
+        self.site, self.x, self.y = newsite, newsite%self.L, newsite//self.L
         return stop
+        
 
 if __name__ == '__main__':
     L = 20
@@ -43,4 +48,4 @@ if __name__ == '__main__':
             output.write(f'{t}    {cam.x}    {cam.y}    {cam.site} \n')
         output.close()
         for j in range(len(lattice)):
-            lattice[j][5] = False
+            cam.occupation[j] = 0

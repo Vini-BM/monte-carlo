@@ -6,7 +6,7 @@ from glob import glob
 cam_list = glob('walker*.txt') # lista de arquivos dos caminhantes
 tlist, xlist, ylist, sdlist = [], [], [], []
 for file in cam_list:
-    t, x, y = np.loadtxt(file,unpack=True)
+    t, x, y = np.loadtxt(file,unpack=True,encoding='latin1')
     sd = x**2 + y**2
     xlist.append(x)
     ylist.append(y)
