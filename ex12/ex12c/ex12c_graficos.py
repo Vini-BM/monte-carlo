@@ -15,9 +15,29 @@ for file in cam_list:
     sitelist.append(site)
     sdlist.append(sd)
 
+# --------- Calculando o desvio quadrático médio dos caminhantes ---------
+
+# Como a simulação de cada amostra tem um número de passos variável,
+# é preciso fazer a média sobre os intervalos comuns a todas as amostras.
+# A ideia é separar o maior intervalo, da amostra mais velha,
+# em intervalos menores comuns a outras amostras, e calcular
+# a média pela média desses intervalos menores, com número de amostras diferente.
+
 longest_t = max(tlist, key=len) # tempo da amostra mais 'velha'
 longest_sd = max(sdlist, key=len) # desvio quadrático da amostra mais 'velha'
 
+maxlen = len(longest_t) # comprimento da amostra mais velha
+reshaped_sdlist = [] # lista para os novos arrays
+for sd in sdlist: # loop sobre os arrays do sd
+    sdlen = len(sd) # comprimento do sd em questão
+    fill = maxlen - sdlen # número de elementos que falta para o array ter o comprimento da amostra mais velha
+    fill_array = np.full(fill,np.nan) # array preenchido com NaN de comprimento igual a diferença anterior
+    reshaped_sd = np.append(sd,fill_array) # novo array para o sd é o array antigo com o número correto de NaN adicionado ao final
+    reshaped_sdlist.append(reshaped_sd) # adicionar novo array na lista
+
+msd = np.nanmean(reshaped_sdlist, axis=0) # a função np.nanmean realiza a média sobre os elementos numéricos, desconsiderando os NaN
+# Realiza o procedimento descrito acima, mas de forma sucinta
+# Repare que não é a mesma coisa que adicionar zeros nos arrays, porque a média ficaria errada 
 
 # --------- Gráficos ---------
 
@@ -28,8 +48,8 @@ plt.rcParams.update({
 })
 
 # Todos os caminhantes:
-plt.plot(longest_sd, color='darkred') # desvio quadrático da amostra mais 'velha'
+plt.plot(msd, color='darkred') # desvio quadrático médio
 plt.xlabel('$t$')
-plt.ylabel('$R^2(t)$')
-plt.title('Desvio quadrático do caminhante tipo SAW')
+plt.ylabel(r'$\overline{R^2(t)}$')
+plt.title('Desvio quadrático médio dos caminhantes tipo SAW')
 plt.show()
