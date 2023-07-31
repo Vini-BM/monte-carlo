@@ -4,6 +4,7 @@ from glob import glob
 
 # --------- Leitura dos dados ---------
 cam_list = glob('sawwalker*.txt') # lista de arquivos dos caminhantes
+num_walkers = int(len(cam_list))
 tlist, xlist, ylist, sitelist = [], [], [], [] # lista para os valores no arquivo
 sdlist = [] # lista para o desvio quadrático
 for file in cam_list:
@@ -53,3 +54,4 @@ plt.xlabel('$t$')
 plt.ylabel(r'$\overline{R^2(t)}$')
 plt.title('Desvio quadrático médio dos caminhantes tipo SAW')
 plt.show()
+plt.savefig(f'saw_msd_{num_walkers}walkers.png', dpi=1200)
