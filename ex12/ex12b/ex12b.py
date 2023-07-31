@@ -12,12 +12,13 @@ class lattice_walker():
         self.L = int(np.sqrt(self.N)) # tamanho da rede
         #self.occupation = np.zeros(self.N) # matriz de ocupação
         self.site = randint(0,self.L**2-1) # sítio inicial (randint é inclusivo nos extremos, então o limite deve ser L**2 - 1)
-        self.x, self.y = self.site%self.L, self.site//self.L # coordenadas do sítio inicial
+        self.x0, self.y0 = self.site%self.L, self.site//self.L # coordenadas do sítio inicial
         # x é o módulo da divisão do sítio por L e y é o resultado inteiro da divisão do sítio por L (pela construção da matriz)
+        self.x, self.y = 0, 0
     def move(self):
         r = randint(1,4) # escolha da direção (1-direita, 2-abaixo, 3-esquerda, 4-acima)
         self.site = self.rede[self.site][r] # nova posição é o vizinho na direção sorteada
-        self.x, self.y = self.site%self.L, self.site//self.L
+        self.x, self.y = abs(self.site%self.L - self.x0), abs(self.site//self.L - self.y0)
 
 # ---------- Criando a matriz de vizinhança ----------
 
