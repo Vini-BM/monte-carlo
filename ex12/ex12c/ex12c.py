@@ -31,11 +31,11 @@ class saw_walker(lattice_walker):
 if __name__ == '__main__':
     L = 20
     lattice = make_lattice(L)
-    num_walkers = 1000
+    num_walkers = 10000
     # Inicialização:
     camlist = [saw_walker(i,lattice) for i in range(num_walkers)]
     for cam in camlist:
-        output = open(f'sawwalker{cam.id:03}.txt', 'w')
+        output = open(f'sawwalker{cam.id:04}.txt', 'w')
         output.write(f'# self avoiding walk em matriz {L}x{L} \n')
         output.write('# tempo  x   y   sítio \n')
         site0, x0, y0 = cam.site, cam.x, cam.y
