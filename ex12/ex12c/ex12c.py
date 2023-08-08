@@ -1,14 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from glob import glob
-from random import randint, choice
+import random as rd
+from time import time
 import sys
 sys.path.insert(0, '../ex12b')
 from ex12b import lattice_walker, make_lattice
 
 class saw_walker(lattice_walker):
-    def __init__(self,ident,lattice):
-        lattice_walker.__init__(self,ident,lattice)
+    def __init__(self,lattice,walkerseed):
+        lattice_walker.__init__(self,lattice,walkerseed)
         self.occupation = np.zeros(self.N) # matriz de ocupação
     def move(self):
         self.occupation[self.site] = 1
@@ -22,9 +23,18 @@ class saw_walker(lattice_walker):
                 options.append(self.site)
         if all(sites == self.site for sites in options):
             stop = True
-        newsite = choice(options) # nova posição é o vizinho na direção sorteada ou o caminhante continua na mesma posição
+        newsite = rd.choice(options) # nova posição é o vizinho na direção sorteada ou o caminhante continua na mesma posição
         self.occupation[newsite] = 1
-        self.site, self.x, self.y = newsite, abs(newsite%self.L - self.x0), abs(newsite//self.L - self.y0)
+        r = np.argwhere(self.rede[self.site] == newsite)[0]
+        if r == 1:
+            self.x += 1
+        elif r == 2:
+            self.y += 1
+        elif r == 3:
+            self.x -= 1
+        elif r == 4:
+            self.y -= 1
+        self.site = newsite
         return stop
         
 
@@ -33,9 +43,10 @@ if __name__ == '__main__':
     lattice = make_lattice(L)
     num_walkers = 10000
     # Inicialização:
-    camlist = [saw_walker(i,lattice) for i in range(num_walkers)]
-    for cam in camlist:
-        output = open(f'sawwalker{cam.id:04}.txt', 'w')
+    for i in range(num_walkers):
+        seed = time()
+        cam = saw_walker(lattice,seed)
+        output = open(f'sawwalker_{cam.id}.txt', 'w')
         output.write(f'# self avoiding walk em matriz {L}x{L} \n')
         output.write('# tempo  x   y   sítio \n')
         site0, x0, y0 = cam.site, cam.x, cam.y

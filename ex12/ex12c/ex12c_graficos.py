@@ -51,9 +51,10 @@ plt.rcParams.update({
 # Todos os caminhantes:
 
 tarray = np.arange(0, len(msd), 1)
-analitico = tarray**(3/2)
+analitico = tarray**(1.5)
 plt.scatter(tarray, msd, color='darkred') # desvio quadrático médio
 plt.plot(analitico, label=r't^{3/2}', color='darkblue')
+#plt.plot(tarray)
 plt.xlabel('$t$')
 plt.ylabel(r'$\overline{R^2(t)}$')
 plt.title('Desvio quadrático médio dos caminhantes tipo SAW')

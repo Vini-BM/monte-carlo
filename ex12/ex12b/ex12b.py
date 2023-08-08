@@ -1,24 +1,32 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from glob import glob
-from random import randint
+import random as rd
+from time import time
 
 # ---------- Definindo caminhante ----------
 
 class lattice_walker():
-    def __init__(self,ident,lattice):
-        self.id, self.rede = ident, lattice # identidade do caminhante e matriz onde ele caminha
+    def __init__(self,lattice,walkerseed):
+        self.id, self.rede = walkerseed, lattice # identidade do caminhante (seed) e matriz onde ele caminha
         self.N = len(lattice)
         self.L = int(np.sqrt(self.N)) # tamanho da rede
         #self.occupation = np.zeros(self.N) # matriz de ocupação
-        self.site = randint(0,self.L**2-1) # sítio inicial (randint é inclusivo nos extremos, então o limite deve ser L**2 - 1)
-        self.x0, self.y0 = self.site%self.L, self.site//self.L # coordenadas do sítio inicial
+        self.site = rd.randint(0,self.L**2-1) # sítio inicial (randint é inclusivo nos extremos, então o limite deve ser L**2 - 1)
         # x é o módulo da divisão do sítio por L e y é o resultado inteiro da divisão do sítio por L (pela construção da matriz)
         self.x, self.y = 0, 0
+        rd.seed(self.id)
     def move(self):
-        r = randint(1,4) # escolha da direção (1-direita, 2-abaixo, 3-esquerda, 4-acima)
+        r = rd.randint(1,4) # escolha da direção (1-direita, 2-abaixo, 3-esquerda, 4-acima)
         self.site = self.rede[self.site][r] # nova posição é o vizinho na direção sorteada
-        self.x, self.y = abs(self.site%self.L - self.x0), abs(self.site//self.L - self.y0)
+        if r == 1:
+            self.x += 1
+        elif r == 2:
+            self.y += 1
+        elif r == 3:
+            self.x -= 1
+        elif r == 4:
+            self.y -= 1    
 
 # ---------- Criando a matriz de vizinhança ----------
 
@@ -99,9 +107,10 @@ if __name__ == '__main__':
     viz = make_lattice(L) # matriz de vizinhança, matriz da rede
     num_walkers = 100
     # Inicialização:
-    camlist = [lattice_walker(i,viz) for i in range(num_walkers)]
-    for cam in camlist:
-        output = open(f'latticewalker{cam.id:02}.txt', 'w')
+    for i in range(num_walkers):
+        seed = time()
+        cam = lattice_walker(viz,seed)
+        output = open(f'latticewalker_{cam.id}.txt', 'w')
         output.write(f'# caminhante aleatório em matriz {L}x{L} \n')
         output.write('# tempo  x   y   sítio \n')
         site0, x0, y0 = cam.site, cam.x, cam.y
