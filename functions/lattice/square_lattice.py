@@ -1,23 +1,22 @@
 import numpy as np
 import random as rd
+from time import time
 
-# ---------- Criando a matriz de vizinhança ----------
+# ---------- MATRIZ DE VIZINHANÇA ----------
 
 def make_lattice(L):
-    N = L**2 # número de sítios
-    
-    # ---------- MATRIZ DE VIZINHANÇA ----------
+    ''' ---------- Notação ----------
+    Sentido horário:
+        [i][0] índice
+        [i][1] direita
+        [i][2] abaixo
+        [i][3] esquerda
+        [i][4] acima
+    '''
+    # ---------- Inicialização ----------
+    N = int(L**2) # número de sítios
     vizinhanca = np.zeros((N,6)) # inicializa a matriz
     
-    # ---------- Notação ----------
-    # Sentido horário:
-        # [i][0] índice
-        # [i][1] direita
-        # [i][2] abaixo
-        # [i][3] esquerda
-        # [i][4] acima
-        # [i][5] ocupação
-
     # ---------- Loop para criar a vizinhança ----------
     for i in range(N):
     
@@ -55,19 +54,38 @@ def make_lattice(L):
             vizinhanca[i][4] = i-L+N # vai para a última linha
         else: # demais linhas -> descontar L
             vizinhanca[i][4] = i-L
-        
-        # ---------- Ocupação ----------
-        #vizinhanca[i][5] = 0 # rede começa desocupada
     
-    # ---------- MATRIZ DA REDE ----------
-    # Criei a matriz que representa a rede, mas ela não é necessária para a simulação
-    # Deixei o código aqui caso seja preciso em outra aplicação
-    #lattice_matrix = np.zeros((L,L))
-    #for x in range(L):
-    #    for y in range(L):
-    #        lattice_matrix[y][x] = x + L*y # a matriz é transposta para reproduzir corretamente a vizinhança
-    #        
     vizinhanca = vizinhanca.astype('int')
-    #lattice_matrix = lattice_matrix.astype('int')
     return vizinhanca
 
+
+# ---------- Criando a matriz da rede ----------
+
+# Criei a matriz que representa a rede, mas ela não é necessária para a simulação
+# Deixei o código aqui caso seja preciso em outra aplicação
+
+def make_lattice_matrix(L):
+    lattice_matrix = np.zeros((L,L))
+    for x in range(L):
+        for y in range(L):
+            lattice_matrix[y][x] = x + L*y # a matriz é transposta para reproduzir corretamente a vizinhança
+            
+    lattice_matrix = lattice_matrix.astype('int')
+    return lattice_matrix
+
+
+# ---------- MATRIZ DE OCUPAÇÃO ----------
+
+def make_occupation(L,p,seed=time()):
+    '''
+    Cria uma matriz de ocupação a partir da densidade p.
+    Gera números aleatórios e compara com p: se r<p, o sítio é ocupado.
+    Ao final, devemos ter em média p*N sítios ocupados.
+    '''
+    N = int(L**2)
+    occupation = np.zeros(N) # inicializa a matriz de ocupação com zeros
+    rd.seed(seed) # fixa a seed
+    for i in range(N): # loop nos sítios
+        r = rd.random() # número aleatório
+        if r < p: occupation[i] = 1 # sítio i fica ocupado se número aleatório for menor que a densidade
+    return occupation
