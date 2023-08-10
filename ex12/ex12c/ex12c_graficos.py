@@ -3,8 +3,9 @@ import matplotlib.pyplot as plt
 from glob import glob
 
 # --------- Leitura dos dados ---------
-cam_list = glob('sawwalker*.txt') # lista de arquivos dos caminhantes
+cam_list = glob('sawwalker_*.txt') # lista de arquivos dos caminhantes
 num_walkers = int(len(cam_list))
+print(num_walkers)
 tlist, xlist, ylist, sitelist = [], [], [], [] # lista para os valores no arquivo
 sdlist = [] # lista para o desvio quadrático
 for file in cam_list:
@@ -52,13 +53,13 @@ plt.rcParams.update({
 
 tarray = np.arange(0, len(msd), 1)
 analitico = tarray**(1.5)
-plt.scatter(tarray, msd, color='darkred') # desvio quadrático médio
-plt.plot(analitico, label=r't^{3/2}', color='darkblue')
-#plt.plot(tarray)
+plt.scatter(tarray, msd, color='darkred', s=8, label=r'$\overline{R^2(t)}$') # desvio quadrático médio
+plt.plot(tarray[275:-1], analitico[275:-1], label=r'$t^{3/2}$', color='darkblue')
 plt.xlabel('$t$')
 plt.ylabel(r'$\overline{R^2(t)}$')
-plt.title('Desvio quadrático médio dos caminhantes tipo SAW')
+plt.title(f'Desvio quadrático médio de {num_walkers} caminhantes tipo SAW')
 plt.xscale('log')
 plt.yscale('log')
+plt.legend()
 plt.show()
 #plt.savefig(f'saw_msd_{num_walkers}walkers.png', dpi=1200)
