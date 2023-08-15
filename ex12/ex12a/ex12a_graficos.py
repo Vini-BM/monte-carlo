@@ -42,6 +42,7 @@ plt.savefig('grafico_1walker.png', dpi=1500)
 plt.show()
 
 # Todos os caminhantes:
+t = tlist[0]
 msd = np.mean(sdlist, axis=0)
 fig, axes = plt.subplots(nrows=1,ncols=2) # subplots
 fig.set_size_inches(12,6)
@@ -52,13 +53,8 @@ ax.set_title('Trajetória dos caminhantes')
 ax.set_xlabel('$x$')
 ax.set_ylabel('$y$')
 ax = axes[1] # gráfico da direita
-ax.plot(msd,color='darkred') # desvio quadrático
-# Reta:
-dy = msd[-1]-msd[0]
-dx = len(tlist[0])
-alpha = dy/dx
-yreta = tlist[0]*alpha + msd[0]
-ax.plot(yreta,color='darkgreen',ls='--')
+ax.scatter(t,msd,color='darkred',s=5) # desvio quadrático
+ax.plot(t,color='darkgreen',ls='--',label=r'$t$') # analítico
 ax.set_title('Deslocamento quadrático médio das caminhadas')
 ax.set_xlabel('$t$')
 ax.set_ylabel('$\\overline{{R(t)}}^2$')
