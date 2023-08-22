@@ -13,23 +13,31 @@ plt.rcParams.update({
     'mathtext.fontset': 'cm'
 })
 
-#  ----- Gráfico -----
+# ----- Leitura dos dados -----
+energy_list, mag_list, L_list = [], [], []
 for datafile in files:
-
     # Valor de L
     L = int(datafile.split('L')[1].split('.')[0])
-    
+    L_list.append(L)
     # Leitura dos dados
     energy, mag = np.loadtxt(datafile, unpack=True, usecols=(0,1))
-    
-    # Histograma
-    fig, axes = plt.subplots(1,2)
+    energy_list.append(energy)
+    mag_list.append(mag)
+
+#  ----- Histograma -----
+fig, axes = plt.subplots(1,2) # dois sublplots
+fig.set_size_inches(12,6)
+
+for energy, mag, L in zip(energy_list, mag_list, L_list):
     ax = axes[0] # energia
-    ax.hist(energy, density=True, color='darkgreen')
+    ax.hist(energy, density=True, bins=25, alpha=0.7, label=f'$L={L}$')
     ax.set_ylabel(r'$E/N$')
+    ax.legend()
     ax = axes[1] # magnetização
-    ax.hist(mag, density=True, color='darkorange')
+    ax.hist(mag, density=True, bins = 25, alpha=0.7, label=f'$L={L}$')
     ax.set_ylabel(r'$m$')
-    fig.supxlabel('Contagem')
-    fig.suptitle(fr'Energia e magnetização do modelo de Ising para $L={L}$')
-    plt.show()
+ax.legend()
+
+fig.supxlabel('Contagem')
+fig.suptitle(fr'Energia e magnetização do modelo de Ising')
+plt.show()

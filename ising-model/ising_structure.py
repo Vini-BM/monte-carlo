@@ -26,14 +26,13 @@ def measure_energy(spins,lattice,J=1):
     sum_spin = 0 # inicializa soma
     N = len(spins) # número de sítios
     for i in range(N):
-        sum_spin_i = 0 # inicializa soma sobre i
+        sum_spin # inicializa soma sobre i
         spin_i = spins[i] # spin do sítio i
-        neighbor_spins = lattice[i] # vizinhos do sítio i
+        neighbor_spins = [lattice[i][1], lattice[i][2]] # vizinhos da direita e de baixo do sítio i (evitar redundâncias)
         for j in neighbor_spins: # loop sobre vizinhos
             spin_j = spins[j] # spin do sítio j
-            sum_spin_i += spin_i * spin_j # aumenta contador da soma sobre i
-        sum_spin += sum_spin_i # aumenta contador da soma
-    energy = -J/2 * sum_spin # divide por dois para remover os termos repetidos
+            sum_spin += spin_i * spin_j # aumenta contador da soma sobre i
+    energy = -J * sum_spin # divide por dois para remover os termos repetidos
     return energy
     
 def measure_magnetization(spins):

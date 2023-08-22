@@ -17,7 +17,7 @@ for L in L_list: # escolhe L
     else:
         output_file = open(output_name, 'w')
         output_file.write('# energy/N    magnetization    seed \n')
-    for repeat in range(1000): # número de vezes que roda o programa
+    for repeat in range(5000): # número de vezes que roda o programa
         seed = time() # fixa a seed
         spins = uniform_spin(N,seed) # cria spins
         energy = measure_energy(spins,lattice) # mede energia
