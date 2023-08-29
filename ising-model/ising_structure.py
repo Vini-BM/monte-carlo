@@ -35,6 +35,20 @@ def measure_energy(spins,lattice,J=1):
     energy = -J * sum_spin # divide por dois para remover os termos repetidos
     return energy
     
+def delta_energy(k, spins, lattice, J=1):
+    '''
+    Mede a diferença de energia após flipar um spin
+    k: sítio
+    spins: lista de spins
+    lattice: matriz de vizinhança
+    '''
+    spin = spins[k]
+    neighbor_spins = 0 # somatório
+    for i in range(1,5):
+        neighbor = lattice[k][i]
+        neighbor_spins += spins[neighbor]
+    return 2*J*spin*neighbor_spins
+    
 def measure_magnetization(spins):
     '''
     Mede a magnetização do modelo de Ising a partir do valor dos spins da rede.
