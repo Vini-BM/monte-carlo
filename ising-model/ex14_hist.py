@@ -31,13 +31,15 @@ fig.set_size_inches(12,6)
 for energy, mag, L in zip(energy_list, mag_list, L_list):
     ax = axes[0] # energia
     ax.hist(energy, density=True, bins=25, alpha=0.7, label=f'$L={L}$')
-    ax.set_ylabel(r'$E/N$')
+    ax.set_xlabel(r'$E/N$')
+    ax.set_xlim(-0.9, 0.9)
     ax.legend()
     ax = axes[1] # magnetização
-    ax.hist(mag, density=True, bins = 25, alpha=0.7, label=f'$L={L}$')
-    ax.set_ylabel(r'$m$')
-ax.legend()
+    ax.hist(mag, density=True, bins=25, alpha=0.7, label=f'$L={L}$')
+    ax.set_xlabel(r'$m$')
+    ax.legend()
 
-fig.supxlabel('Contagem')
+fig.supylabel('Densidade de probabilidade')
 fig.suptitle(fr'Energia e magnetização do modelo de Ising')
+plt.savefig('grafico_ex14.png', dpi=1000)
 plt.show()
