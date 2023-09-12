@@ -59,4 +59,3 @@ def measure_magnetization(spins):
         sum_spin += spin
     magnetization = sum_spin/N
     return magnetization
-
