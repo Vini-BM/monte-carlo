@@ -9,8 +9,6 @@ from square_lattice import make_lattice
 # ----- Inicialização -----
 T_list = [1, 2.27, 3]
 L_list = [50, 100]
-seed = 52304
-rd.seed(seed)
 
 for L in L_list:
     N = L**2
@@ -19,13 +17,15 @@ for L in L_list:
         beta = 1/T
 
         # ------ Transiente -----
-
+        seed = time()
+        rd.seed(seed)
+        
         spins = uniform_spin(N,seed)
         energy = measure_energy(spins, lattice)
         mag = measure_magnetization(spins)
         
         step = 1
-        transient_steps = 200
+        transient_steps = 300
         while step < transient_steps:
             # Monte Carlo Step
             for i in range(N):
@@ -52,9 +52,9 @@ for L in L_list:
         num_steps = 1000
 
         # Saída
-        saida = open(f'files/temporal_corr_L{L}_T{T}.dat', 'w')
+        saida = open(f'files/temporal_corr_L{L}_T{T}_{seed}.dat', 'w')
         saida.write(f'# mcs    C(t) \n')
-        saida.write(f'0  0 \n')
+        saida.write(f'0    0 \n')
 
         while step < num_steps:
             # Monte Carlo Step
