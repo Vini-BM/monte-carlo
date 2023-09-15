@@ -59,3 +59,32 @@ def measure_magnetization(spins):
         sum_spin += spin
     magnetization = sum_spin/N
     return magnetization
+
+def measure_chi(N, T, magnetization):
+    '''
+    Mede a susceptibilidade magnética do sistema.
+    Magnetization deve ser um array 1D à correspondente temperatura T.
+    '''
+    magnetization = np.asarray(magnetization)
+    mag2 = magnetization**2
+    abs_mag = np.abs(magnetization)
+    return N/T * (np.mean(mag2) - (np.mean(abs_mag))**2)
+
+def metropolis_mcs(energy,spins,lattice,beta):
+    '''
+    Troca o spin de todos os sítios pelo algoritmo de Metropolis.
+    Corresponde a um MCS.
+    '''
+    N = len(spins)
+    for i in range(N):
+        delta_e = delta_energy(i, spins, lattice)
+        if delta_e <= 0: # aceita a troca
+            spins[i] *= -1
+            energy += delta_e
+        else:
+            p = np.exp(-beta*delta_e) # probabilidade de aceite
+            r = rd.random() # número aleatório
+            if r < p: # aceita a troca
+                spins[i] *= -1
+                energy += delta_e
+    return energy, spins
