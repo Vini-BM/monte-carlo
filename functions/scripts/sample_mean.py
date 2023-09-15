@@ -18,9 +18,12 @@ name_pattern = input('Nome dos arquivos (insira wildcard): ') # padrão do nome 
 output_name = 'mean_' + name_pattern.split(sep='*')[0] + '.txt' # nome do arquivo de saída
 # Selecionar colunas
 columns = input('Colunas para usar (vazio se todas): ')
-columns = columns.split()
-cols = [int(i) for i in columns]
-
+if len(columns) > 0:
+    use_cols = True
+    columns = columns.split()
+    cols = [int(i) for i in columns]
+else:
+    use_cols = False
 # Arquivos
 files = glob(f'{name_pattern}') # lista de arquivos
 num_files = len(files) # número de arquivos
@@ -28,20 +31,23 @@ num_files = len(files) # número de arquivos
 # Cabeçalho
 with open(files[0], 'r') as sample:
     header = sample.readlines()[0] # cabeçalho dos arquivos, lê o primeiro da lista porque assume que todos têm o mesmo cabeçalho
-    if len(cols) == 0:
-        new_header = header
-    else: # separa as colunas correspondentes do cabeçalho
+    if use_cols: # separa as colunas correspondentes do cabeçalho
         header = header.split()
         new_header = header[0] + ' '
         for i in cols:
             new_header += header[i+1] + ' '
         new_header += '\n'
+    else:
+        new_header = header
 
 # Dados
 data = [] # lista para os dados de todos os arquivos
 data_len = [] # lista para o tamanho de cada arquivo (linhas)
 for file in files: # loop em todos os arquivos que encaixam na descrição
-    filedata = np.loadtxt(file,encoding='latin1',usecols=cols) # leitura dos dados
+    if use_cols:
+        filedata = np.loadtxt(file,encoding='latin1',usecols=cols) # leitura dos dados
+    else:
+        filedata = np.loadtxt(file,encoding='latin1') # leitura dos dados
     data.append(filedata)
     data_len.append(len(filedata)) # comprimento da primeira dimensão do array
 
