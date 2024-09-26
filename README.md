@@ -1,6 +1,7 @@
 # monte-carlo
 
 This repo contains code developed for the course on Monte Carlo I have taken during undergrad. *Programs may contain errors!* Since the course is finished, I do not intend to update it.
+
 Programs are structured roughly as follows:
 
 - [ex01](https://github.com/Vini-BM/monte-carlo/tree/main/ex01), [ex03](https://github.com/Vini-BM/monte-carlo/tree/main/ex03): introductory exercises based on **Ehrenfest urn model**.
